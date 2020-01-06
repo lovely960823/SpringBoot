@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.base.spring.project.mapper.PlMapper" >
+  <resultMap id="BaseResultMap" type="com.base.spring.project.model.Pl" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="contents" property="contents" jdbcType="VARCHAR" />
+    <result column="author" property="contents" jdbcType="VARCHAR" />
+    <result column="views" property="views" jdbcType="VARCHAR" />
+    
+   <association property="user" javaType="com.base.spring.project.model.User">
+   		 <id column="uuid" property="id" jdbcType="INTEGER" />
+   		 <result column="uname" property="name" jdbcType="VARCHAR" />
+   		 <result column="uimg" property="img" jdbcType="VARCHAR" />
+   </association>
+    
+  </resultMap>
+  
+  <select id="selectPlAndUser" parameterType="int" resultMap="BaseResultMap">
+  	select p.* ,u.id as uuid,u.name as uname,u.img as uimg from pl p left join user u on p.uid=u.id where p.nid=#{id}
+  </select> 
+  
+</mapper>

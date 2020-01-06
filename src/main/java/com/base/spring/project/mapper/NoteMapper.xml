@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.base.spring.project.mapper.NoteMapper" >
+  <resultMap id="BaseResultMap" type="com.base.spring.project.model.Note" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="contents" property="contents" jdbcType="VARCHAR" />
+    <result column="contents1" property="contents1" jdbcType="VARCHAR" />
+    <result column="author" property="author" jdbcType="VARCHAR" />
+    <result column="views" property="views" jdbcType="VARCHAR" />
+    <result column="pcount" property="pcount" jdbcType="VARCHAR" />
+    
+     <association property="user" javaType="com.base.spring.project.model.User">
+   		 <id column="uuid" property="id" jdbcType="INTEGER" />
+   		 <result column="uname" property="name" jdbcType="VARCHAR" />
+    </association>
+   
+    <!-- <collection property="pl" ofType="com.base.spring.project.model.Pl" column="nid" >
+     	<id column="pid" property="id"/> 这里的column对应的是下面查询的别名，而不是表字段名
+     	<result column="pc" property="contents"/>property对应JavaBean中的属性名
+    </collection> -->
+  </resultMap>
+  <!-- 前后台列表查询 -->
+  <select id="selectByParam" parameterType="com.base.spring.project.model.Note" resultMap="BaseResultMap">
+  	<!-- select n.*, p.id as pid,p.contents as pc from note n left join pl p on n.id=p.nid -->
+  	<!-- select n.*,u.id as uuid,u.name as uname from note n inner join user u on n.author=u.id --><!-- 查询note时同时查到对应的user信息 -->
+  	select n.*,u.id as uuid,u.name as uname,COUNT(p.nid) as pcount  from note n inner join user u on n.author=u.id
+  	  left join pl p on  n.id = p.nid    <!-- 升级版，同时查询到该note每条记录对应的所有评论总数 -->
+  	 <where>
+  		1=1
+  		 <if test=" note.title!=null and note.title!='' ">
+  			and n.title like concat('%',#{note.title},'%')
+  		</if>
+  		<if test=" note.author!=null and note.author!='' ">
+  			and n.author = #{note.author}
+  		</if>
+  	</where> 
+  		group by n.id
+  </select> 
+  
+   <!-- 后台收藏查询 -->
+  <select id="selectAllLike" parameterType="com.base.spring.project.model.Note" resultMap="BaseResultMap">
+  	select n.* from note n inner join ilike i on n.id=i.uid
+  	 <where>
+  		1=1
+  		 <if test=" note.title!=null and note.title!='' ">
+  			and n.title like concat('%',#{note.title},'%')
+  		</if>
+  		<if test=" note.author!=null and note.author!='' ">
+  			and n.author = #{note.author}
+  		</if>
+  	</where> 
+  </select> 
+  
+</mapper>

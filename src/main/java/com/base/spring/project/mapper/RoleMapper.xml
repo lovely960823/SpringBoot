@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.base.spring.project.mapper.RoleMapper" >
+  <resultMap id="BaseResultMap" type="com.base.spring.project.model.Role" >
+    <result column="ruid" property="ruid" jdbcType="INTEGER" />
+    <result column="nid" property="nid" jdbcType="INTEGER" />
+  </resultMap>
+  
+  <insert id="saveMore" parameterType="java.util.Map" >
+  	insert into role(ruid,nid,uid) values
+	  	<foreach collection="map.splits" separator="," item="nid">
+	  		(#{map.ruid},#{nid},#{map.userId})
+	  	</foreach>
+  </insert> 
+</mapper>
