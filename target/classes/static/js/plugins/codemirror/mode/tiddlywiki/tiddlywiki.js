@@ -162,7 +162,7 @@ CodeMirror.defineMode("tiddlywiki", function () {
         return ret('brace', 'brace');
       }
     }
-    if (ch == "@") {    // check for space link. TODO fix @MavenProject: base.com.project:baseboot:0.0.1-SNAPSHOT @ E:\\newworkspace\\baseboot\\pom.xml@ highlighting
+    if (ch == "@") {    // check for space link. TODO fix @MavenProject: base.com.project:baseboot:0.0.1-SNAPSHOT @ D:\\tools\\workspace\\SpringBoot\\pom.xml@ highlighting
       stream.eatWhile(isSpaceName);
       return ret("link", "link");
     }

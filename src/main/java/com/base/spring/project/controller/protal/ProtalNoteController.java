@@ -1,12 +1,15 @@
 package com.base.spring.project.controller.protal;
 
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Controller;
 //import org.springframework.util.StringUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -39,6 +42,8 @@ public class ProtalNoteController extends BaseController{
 	private IlikeService ilikeService;
 	@Autowired
 	private DianzService dianzService;
+	@Autowired
+	private StringRedisTemplate redisTemplate;
 	
 	
 	@RequestMapping("/noteList")
@@ -176,8 +181,45 @@ public class ProtalNoteController extends BaseController{
 	
 	
 	
+	/**
+	 * 2020/1/9
+	 * 点赞和取消赞操作，并获取所有的赞总量
+	 * @param noteId
+	 * @param userId
+	 * @return
+	 */
+	@RequestMapping("/redisDz")
+	@ResponseBody
+	public Map<String,Object> noteZcounts(Integer noteId,Integer userId){
+		
+		Boolean flag = redisTemplate.opsForSet().isMember("noteId:"+noteId, userId+"");//判断该key里面是否包含这个userId，包含说明点过
+		int isDo=1;//默认1为点赞 0为取消点赞
+		if(flag) {
+			redisTemplate.opsForSet().remove("noteId:"+noteId, userId+"");//取消点赞
+			isDo=0;
+		}else {
+			isDo=1;
+			redisTemplate.opsForSet().add("noteId:"+noteId, userId+"");//点赞
+		}
+		Long size = redisTemplate.opsForSet().size("noteId:"+noteId);//获取某个文章的总赞数
+		Map<String,Object> map = new HashMap<>();
+		map.put("isDo", isDo);
+		map.put("size", size);
+		return map;
+	}
 	
-	
+	/**
+	 * 文章进来的时候获取该文章的所有赞
+	 * @param noteId
+	 * @param userId
+	 * @return
+	 */
+	@RequestMapping("/getAllz")
+	@ResponseBody
+	public Long getAllz(Integer noteId,Integer userId){
+		Long size = redisTemplate.opsForSet().size("noteId:"+noteId);//获取某个文章的总赞数
+		return size;
+	}
 	
 	
 	

@@ -93,19 +93,12 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                 <div class="ibox">
                     <div class="ibox-content">
                         <div class="pull-right">
-                            	<span>点赞数:</span><span style="color:green">${dzcount}</span>
+                            	<a href="javascript:void(0)" onclick="dianz('${note.id}')"><span>点赞:</span></a><span style="color:green" id="mydzcount">0</span>
                             	<span>评论数:</span><span style="color:green">${plcount}</span>
                             <button class="btn btn-white btn-xs" type="button" onclick="callback()">返回</button>
                             <div class="share-demo">
                          		<a href="javascript:void(0)" class="share" title="分享"><img width="50px;" height="50px;" src="${pageContext.request.contextPath }/static/share/images/share-ico.png"/></a>
                        		</div>
-                   			<div class="share-demo">
-                                <a href="javascript:void(0)" onclick="dianz('${note.id}')"> <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true" title="点赞"></span> </a>
-                                	&nbsp;&nbsp;
-                                <a href="javascript:void(0)" onclick="shoucang('${note.id}')"><span class="glyphicon glyphicon-heart" aria-hidden="true" title="收藏"></span></a>  
-                              	    &nbsp;&nbsp;  
-                            	<a href="javascript:void(0)" onclick="guanz('${note.user.id}')"><span class="glyphicon glyphicon-star" aria-hidden="true" title="关注"></span></a>
-                            </div>
                         </div>
                         <div class="text-center article-title">
                             <h1>${note.title}</h1>
@@ -490,12 +483,47 @@ $('.share').shareConfig({
 		Title : '分享到' //显示标题
 	});
 	
+	//点赞
 	function dianz(noteId){
 		if(sessionUser==null||sessionUser==''){
 			layer.alert('您还未登录，无法进行该操作');
 			return false;
 		}
-		
+		$.ajax({
+        	url:"${pageContext.request.contextPath }/protal/note/redisDz",
+        	data:{"noteId":noteId,"userId":sessionUser},
+        	type:"POST",
+        	success:function(data){
+        		console.log(data);
+        		var isDo=data.isDo;//点赞还是取消
+        		var size=data.size;//总赞数
+        		$('#mydzcount').text(size);
+        		
+        	},
+        	error:function(){
+        		layer.alert("服务器忙");
+        	},
+        	dataType:"json"
+        });  
 	}
+	//进来的时候加载出来该文章有多少赞
+	function getAllZs(){
+		var noteId='${note.id}';
+		$.ajax({
+	    	url:"${pageContext.request.contextPath }/protal/note/getAllz",
+	    	data:{"noteId":noteId},
+	    	type:"POST",
+	    	success:function(data){
+	    	
+	    		$('#mydzcount').text(data);
+	    		
+	    	},
+	    	error:function(){
+	    		layer.alert("服务器忙");
+	    	},
+	    	dataType:"json"
+	    });
+	}	
+	getAllZs();//调用方法
 </script>
 </html>

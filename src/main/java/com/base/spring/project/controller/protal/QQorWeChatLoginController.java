@@ -36,8 +36,8 @@ public class QQorWeChatLoginController extends BaseController {
 	 */
 	private static String qq_appid="101826833";
 	private static String qq_secret="26333e6eaaa5f0596bdc1bf0fd452ec8";
-	//private static String qq_url="http://127.0.0.1:80/qqLoginTest";
-	private static String qq_url="http://note.java.itcast.cn/qqLoginTest";
+	private static String qq_url="http://www.hnhcljw.top/BaseSpringJar/protal/note/noteList";
+	//private static String qq_url="http://note.java.itcast.cn/qqLoginTest";
 	
 	@RequestMapping("/protal/user/qqLogin")
 	public void qqLogin() {
@@ -104,7 +104,7 @@ public class QQorWeChatLoginController extends BaseController {
 	}
 	
 	
-	/**修改本地的host文件，项目端口号改成80
+	/**1、修改本地的C:\Windows\System32\drivers\etc\hosts文件，2、项目端口号改成80
 	 * 127.0.0.1    note.java.itcast.cn 
 	 */
 	
