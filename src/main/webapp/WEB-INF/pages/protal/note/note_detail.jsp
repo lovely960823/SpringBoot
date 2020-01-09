@@ -17,6 +17,12 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     <meta name="description" content="">
 
     <link rel="shortcut icon" href="/favicon.ico"> 
+    
+    <script src="${pageContext.request.contextPath }/static/js/jquery.min.js" type="text/javascript" ></script><!-- 引入jquery -->
+    <link href="${pageContext.request.contextPath }/static/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+	<link href="${pageContext.request.contextPath }/static/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet" type="text/css" />
+	<script src="${pageContext.request.contextPath }/static/bootstrap/js/bootstrap.min.js" type="text/javascript" ></script>
+	
     <link href="${pageContext.request.contextPath }/static/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
     <link href="${pageContext.request.contextPath }/static/css/font-awesome.css?v=4.4.0" rel="stylesheet">
 
@@ -93,6 +99,13 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                             <div class="share-demo">
                          		<a href="javascript:void(0)" class="share" title="分享"><img width="50px;" height="50px;" src="${pageContext.request.contextPath }/static/share/images/share-ico.png"/></a>
                        		</div>
+                   			<div class="share-demo">
+                                <a href="javascript:void(0)" onclick="dianz('${note.id}')"> <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true" title="点赞"></span> </a>
+                                	&nbsp;&nbsp;
+                                <a href="javascript:void(0)" onclick="shoucang('${note.id}')"><span class="glyphicon glyphicon-heart" aria-hidden="true" title="收藏"></span></a>  
+                              	    &nbsp;&nbsp;  
+                            	<a href="javascript:void(0)" onclick="guanz('${note.user.id}')"><span class="glyphicon glyphicon-star" aria-hidden="true" title="关注"></span></a>
+                            </div>
                         </div>
                         <div class="text-center article-title">
                             <h1>${note.title}</h1>
@@ -123,34 +136,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                                 	</form>
                                 	
                                 <div id="pldata"><!-- 存放评论数据的容器 -->
-	                               <!-- 评论数据开始 -->
-	                                <%-- <c:forEach items="${pl}" var="pl">
-	                                	<div class="social-feed-box">
-		                                    <div class="social-avatar">
-		                                        <a href="" class="pull-left">
-		                                            <c:if test="${empty pl.user.img }">
-		                                            	<img alt="image" src="${pageContext.request.contextPath }/static/img/a1.jpg">
-		                                            </c:if>
-		                                            
-		                                            <c:if test="${not empty pl.user.img }">
-		                                            	<img alt="image" src="${pl.user.img }">
-		                                            </c:if>
-		                                        </a>
-		                                        <div class="media-body">
-		                                            <a href="#">
-		                                              	      ${pl.user.name}
-		                                                </a>
-		                                            <small class="text-muted"><fmt:formatDate value="${pl.createTime}" dateStyle="long"/></small>
-		                                        </div>
-		                                    </div>
-		                                    <div class="social-body">
-		                                        <p>
-		                                       	    ${pl.contents }
-		                                        </p>
-		                                    </div>
-		                                </div>
-	                                </c:forEach> --%>
-	                                <!-- 评论数据结束 -->
+	                               
                                 </div>
                                 <!-- 加载查询 -->
 								<div class="clickbtn">
@@ -503,5 +489,13 @@ $('.share').shareConfig({
 		Content : 'Share', //内容DIV ID
 		Title : '分享到' //显示标题
 	});
+	
+	function dianz(noteId){
+		if(sessionUser==null||sessionUser==''){
+			layer.alert('您还未登录，无法进行该操作');
+			return false;
+		}
+		
+	}
 </script>
 </html>

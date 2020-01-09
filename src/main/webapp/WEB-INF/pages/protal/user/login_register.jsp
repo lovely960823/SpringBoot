@@ -52,17 +52,13 @@ body {
 								<input name="password" id="log_password" class="input" data-type="password">
 							</div>
 							<div class="group">
-								<span class="label"> 是否记住密码</span>
-								<input name="rememberMe" id="rememberMe" class="input" type="checkbox" onclick="remember()">
-							</div>
-							<div class="group">
 								<input type="button" id="theButton" class="button" value="登录" onclick="ensuresubmit()">
 							</div>
 						</form>
 						<div class="hr"></div>
 						<div class="foot-lnk">
-							<a href="${url}">QQ登录</a>
-							<a href="javascript:void(0)" onclick="wechatLogin()">微信登录</a>
+							<a href="${pageContext.request.contextPath }/protal/user/qqLogin">QQ登录</a>
+							<a href="${pageContext.request.contextPath }/protal/user/wxLogin">微信登录</a>
 							<input type="hidden" id="sessionId"/>
 							<div id="code"></div> 
 							<div id="userinfo"></div> 
@@ -281,83 +277,5 @@ var emailreg = /^\w+((.\w+)|(-\w+))@[A-Za-z0-9]+((.|-)[A-Za-z0-9]+).[A-Za-z0-9]+
                 	dataType:"json"
                 });        	
         }
-        
-        
-       //weiixn
-       var c = null;
-	 function getInfoJson(){
-	 	$.ajax({
-	         url: "/getInfoJson",
-	         type: "get",
-	         success: function (data) {
-	        	 if(data != "no"){
-	        		 $("#userinfo").html(data);
-	        		 //登录成功，取消监听
-	        		 clearInterval(c);
-	             }
-	         }
-	 	});
-	 }
- 
-    function wechatLogin(){
-    	$.ajax({
-            url: "/wxLoginPage",
-            type: "POST",
-            success: function (data) {
-            	$("#sessionId").val(data.sessionId);
-            	//生成二维码
-            	var qrcode = new QRCode(document.getElementById("code"), {
-                    width : 200,
-                    height : 200
-                });
-                qrcode.makeCode(data.uri);      
-                //监听是否成功登录(每秒执行一次 getInfoJson方法)
-                c  = setInterval(getInfoJson,1000);
-            }
-    	});
-    }
-    
-    
-    //选中记住密码触发事件，如果选中就赋值为1 ，否则赋值为0
-    function remember(){
-        var remFlag = $("input:checkbox").is(':checked');
-        if(remFlag){ 
-            //cookie存用户名和密码,回显的是真实的用户名和密码,存在安全问题.
-            var conFlag = confirm("记录密码功能不宜在公共场所使用,以防密码泄露.您确定要使用此功能吗?");
-            if(conFlag){ 
-                //确认标志
-                $("#rememberMe").val("1");
-            }else{
-                $("input:checkbox").removeAttr('checked');
-                $("#rememberMe").val("0");
-            }
-        }else{ 
-            //如果没选中设置remFlag为""
-            $("#rememberMe").val("0");
-        }
-    }
-    
-  //启动函数来获取cookie中保存的用户信息
-    $(function(){
-        var str = getCookie("loginInfo");
-        var username = str.split("&")[0].split("=")[1];
-        var password = str.split("&")[1].split("=")[1];
-        //自动填充用户名和密码
-        $("#log_name").val(username);
-        $("#log_password").val(password);
-        $("input:checkbox").prop("checked", true);
-   });
-  
-    //获取cookie
-    function getCookie(cname) {
-         var name = cname + "=";
-        var ca = document.cookie.split(';');
-        for(var i=0; i<ca.length; i++) {
-            var c = ca[i];
-            while (c.charAt(0)==' ') c = c.substring(1);
-            if (c.indexOf(name) != -1) return c.substring(name.length, c.length);
-        }
-        return "";
-    }
 </script>
 </html>

@@ -94,7 +94,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 						<!-- 列表数据 -->
                         <div class="ibox-content forum-container">
                             <div class="forum-title">
-                                <div class="pull-right forum-desc">
+                                <div class="pull-right forum-desc" style="margin-right: 180px;">
                                     <samll>总帖子数：${result.count}</samll>
                                 </div>
                                 <h3>数据列表</h3>
@@ -125,13 +125,13 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	                                            <small>评论</small>
 	                                        </div>
 	                                    </div>
-	                                    <div class="col-sm-1 forum-info">
+	                                    <%-- <div class="col-sm-1 forum-info">
 	                                        <a href="javascript:void(0)" onclick="dianz('${note.id}','${note.user.id}')"><span class="glyphicon glyphicon-thumbs-up" aria-hidden="true" title="点赞"></span></a>
 	                                        	&nbsp;&nbsp;
 	                                        <a href="javascript:void(0)" onclick="shoucang('${note.id}')"><span class="glyphicon glyphicon-heart" aria-hidden="true" title="收藏"></span></a>  
 	                                      	    &nbsp;&nbsp;  
 	                                    	<a href="javascript:void(0)" onclick="guanz('${note.user.id}')"><span class="glyphicon glyphicon-star" aria-hidden="true" title="关注"></span></a>
-	                                    </div> 
+	                                    </div>  --%>
 	                                </div>
 	                            </div>
 							</c:forEach>
