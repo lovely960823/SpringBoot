@@ -94,7 +94,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                     <div class="ibox-content">
                         <div class="pull-right">
                             	<a href="javascript:void(0)" onclick="dianz('${note.id}')"><span>点赞:</span></a><span style="color:green" id="mydzcount">0</span>
-                            	<span>评论数:</span><span style="color:green">${plcount}</span>
                             <button class="btn btn-white btn-xs" type="button" onclick="callback()">返回</button>
                             <div class="share-demo">
                          		<a href="javascript:void(0)" class="share" title="分享"><img width="50px;" height="50px;" src="${pageContext.request.contextPath }/static/share/images/share-ico.png"/></a>

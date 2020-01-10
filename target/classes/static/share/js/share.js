@@ -21,7 +21,7 @@
                 layerHtml += '<li title="分享到新浪微博"><a class="share-xl-weiBo"></a><span></span></li>';
                 layerHtml += '<li title="分享到人人网"><a class="share-people"</a><span></span></li>';
                 layerHtml += '<li title="分享到腾讯微博"><a class="share-tx-weiBo"></a><span></span></li>';
-                layerHtml += '<li title="分享到微信" class="share-code"><a class="share-tx-weChat"></a><span></span>';
+                //layerHtml += '<li title="分享到微信" class="share-code"><a class="share-tx-weChat"></a><span></span>';
 
 
                 layerHtml += '<div id="layerWxcode" class="towdimcodelayer js-transition">'+

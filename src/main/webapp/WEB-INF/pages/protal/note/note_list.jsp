@@ -47,10 +47,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 							</c:if>
 							
 							<c:if test="${not empty loginUser.name}">
-								<a href="javascript:void(0)" onclick="showMenu()" data-toggle="dropdown" class="dropdown-toggle" >${loginUser.name}<strong class="caret"></strong></a>
+								<a href="javascript:void(0)" onclick="showMenu()" data-toggle="dropdown" class="dropdown-toggle" ><img style="width: 50px;height: 50px;" alt="" src="${loginUser.img}"><strong class="caret"></strong></a>
 								<ul class="dropdown-menu">
 									<li>
-										<a href="${pageContext.request.contextPath }/back/user/myself">个人中心</a>
+										<a href="${pageContext.request.contextPath }/protal/user/myself">个人中心</a>
 									</li>
 									<li>
 										<a href="#">修改密码</a>
@@ -75,9 +75,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                         <div class="ibox-content m-b-sm border-bottom">
                             <div class="p-xs">
                                 <div class="pull-left m-r-md">
-                                    <i class="fa fa-globe text-navy mid-icon"></i>
                                 </div>
-                                <h2>欢迎来到H+论坛</h2>
+                                <h2>欢迎来到H+博客</h2>
                                 <div class="search-form">
 		                            <form action="${pageContext.request.contextPath }/protal/note/noteList" method="post" autocomplete="off">
 		                                <div class="input-group">
@@ -125,13 +124,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	                                            <small>评论</small>
 	                                        </div>
 	                                    </div>
-	                                    <%-- <div class="col-sm-1 forum-info">
-	                                        <a href="javascript:void(0)" onclick="dianz('${note.id}','${note.user.id}')"><span class="glyphicon glyphicon-thumbs-up" aria-hidden="true" title="点赞"></span></a>
-	                                        	&nbsp;&nbsp;
-	                                        <a href="javascript:void(0)" onclick="shoucang('${note.id}')"><span class="glyphicon glyphicon-heart" aria-hidden="true" title="收藏"></span></a>  
-	                                      	    &nbsp;&nbsp;  
-	                                    	<a href="javascript:void(0)" onclick="guanz('${note.user.id}')"><span class="glyphicon glyphicon-star" aria-hidden="true" title="关注"></span></a>
-	                                    </div>  --%>
 	                                </div>
 	                            </div>
 							</c:forEach>
@@ -182,51 +174,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     <!-- 自定义js -->
     <script src="${pageContext.request.contextPath }/static/js/content.js?v=1.0.0"></script>
 <script type="text/javascript">
-	function dianz(noteId,userId){
-		if(sessionUser==null||sessionUser==''){
-			layer.alert('您还未登录，无法进行该操作');
-			return false;
-		}
-		//点赞前判断
-		$.ajax({
-        	url:"${pageContext.request.contextPath }/protal/user/dzpd",
-        	data:{"noteId":noteId,"userId":userId},
-        	type:"POST",
-        	success:function(data){
-        		var mapVal=data.val;
-        		if(mapVal==0){
-        			layer.alert('不可重复点赞');
-        		}else{
-        			makeDz(mapVal);
-        		}
-        	},
-        	error:function(){
-        		layer.alert("服务器忙");
-        	},
-        	dataType:"json"
-        }); 
-	}
-	//确认点赞
-	function makeDz(mapVal){
-		var result= mapVal.split(",")
-		var noteId= result[0];
-		var userId= result[1];
-		$.ajax({
-        	url:"${pageContext.request.contextPath }/protal/user/ensureDz",
-        	data:{"noteId":noteId,"userId":userId},
-        	type:"POST",
-        	success:function(data){
-        		if(data>0){
-        			layer.alert('点赞成功');
-        		}
-        	},
-        	error:function(){
-        		layer.alert("服务器忙");
-        	},
-        	dataType:"json"
-        }); 
-	}
-	
 	//关注操作
 	function guanz(id){
 		if(sessionUser==null||sessionUser==''){

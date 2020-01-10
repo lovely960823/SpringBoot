@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.mail.internet.MimeMessage;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +21,11 @@ import com.base.spring.project.model.User;
 import com.base.spring.project.service.DianzService;
 import com.base.spring.project.service.GuanzService;
 import com.base.spring.project.service.UserService;
-
+/**
+ * 2020/1/10
+ * @author ljw
+ *
+ */
 @Controller
 @RequestMapping("/protal/user")
 public class ProtalUserController extends BaseController{
@@ -31,8 +34,6 @@ public class ProtalUserController extends BaseController{
 	private UserService userService;
 	@Autowired
 	private GuanzService guanzService;
-	@Autowired
-	private DianzService dianzService;
 	@Autowired
 	private JavaMailSender javaMailSender;
 
@@ -102,6 +103,7 @@ public class ProtalUserController extends BaseController{
 	@RequestMapping("/doRegister")
 	@ResponseBody
 	public int doRegister(User user) {
+		user.setImg("/static/file/default/404.jpg");//设置默认头像
 		int i = userService.save(user);
 		if(i>0) {
 			return 1;
@@ -131,15 +133,6 @@ public class ProtalUserController extends BaseController{
 		User loginUser = userService.findUserByT(user);
 		session.setAttribute("loginUser", loginUser);
 		if(loginUser!=null) {
-			//cookie缓存设置
-			String rem = this.getParameter("rememberMe");
-			if ("1".equals(rem)) {
-				String loginInfo="name="+user.getName()+"&password="+ user.getPassword();
-				Cookie userCookie = new Cookie("loginInfo", loginInfo.toString());
-				userCookie.setMaxAge(1 * 24 * 60 * 60); // 存活期为一天 1*24*60*60
-				userCookie.setPath("/");
-				this.getResponse().addCookie(userCookie);
-			}
 			return 1;
 		}else {
 			return 0;
@@ -191,46 +184,8 @@ public class ProtalUserController extends BaseController{
 		}
 	}
 	
-	/**
-	 * 点赞判断
-	 * @param noteId
-	 * @return
-	 */
-	@RequestMapping("/dzpd")
-	@ResponseBody
-	public Map<String, Object> dianzpd(Integer noteId,Integer userId) {
-		/**
-		 * 不知道为啥返回不了String类型  一直报错，所以用map解决一下
-		 */
-		Map<String, Object> map =new HashMap<>();
-		Dianz dianz = dianzService.findByNidAndUid(noteId,userId);
-		String str="";
-		if(dianz!=null) {
-			str="0";
-			map.put("val", str);
-			return map;
-		}else {
-			str+=str+noteId+","+userId;
-			map.put("val", str);
-			return map;
-		}
+	@RequestMapping("/myself")
+	private String myself() {
+		return "protal/user/myself";
 	}
-	
-	
-	@RequestMapping("/ensureDz")
-	@ResponseBody
-	public int ensureDz(Integer noteId,Integer userId) {
-		
-		Dianz dianz = new Dianz();
-		dianz.setUid(userId);
-		dianz.setNid(noteId);
-		int i = dianzService.save(dianz);
-		if(i>0) {
-			return 1;
-		}else {
-			return 0;
-		}
-	}
-	
-	
 }
