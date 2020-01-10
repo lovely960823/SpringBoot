@@ -10,7 +10,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -34,40 +33,37 @@ public class QQorWeChatLoginController extends BaseController {
 	/**
 	 * QQ登录需要的配置参数
 	 */
-	private static String qq_appid="101826833";
-	private static String qq_secret="26333e6eaaa5f0596bdc1bf0fd452ec8";
-	private static String qq_url="http://www.hnhcljw.top/BaseSpringJar/protal/note/noteList";
-	//private static String qq_url="http://note.java.itcast.cn/qqLoginTest";
+	private static String appid="101826833";
+	private static String secret="26333e6eaaa5f0596bdc1bf0fd452ec8";
+	private static String url="http://127.0.0.1:80/qqLoginTest";
 	
 	@RequestMapping("/protal/user/qqLogin")
-	public void qqLogin() {
+	public void toqqLogin(HttpServletResponse response) {
 		String baseUrl="https://graph.qq.com/oauth2.0/authorize?";
 		baseUrl+="response_type=code&";
-		baseUrl+="client_id="+qq_appid;
-		baseUrl+="&redirect_uri="+qq_url;
+		baseUrl+="client_id="+appid;
+		baseUrl+="&redirect_uri="+url;
 		baseUrl+="&state=ok";
 		try {
-			this.getResponse().sendRedirect(baseUrl);
+			response.sendRedirect(baseUrl);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-
 	/**
-	 * 回调
+	 * 回调过来的
 	 * @param code
-	 * @param response
+	 * @return
 	 * @throws Exception
 	 */
 	@RequestMapping("/qqLoginTest")
-	@ResponseBody
-	public void qqLoginTest(String code,HttpServletResponse response) throws Exception {
+	public String qqLoginTest(String code) throws Exception {
 		String baseUrl="https://graph.qq.com/oauth2.0/token?";
 		baseUrl+="grant_type=authorization_code&";
-		baseUrl+="client_id="+qq_appid;
-		baseUrl+="&client_secret="+qq_secret;
+		baseUrl+="client_id="+appid;
+		baseUrl+="&client_secret="+secret;
 		baseUrl+="&code="+code;
-		baseUrl+="&redirect_uri="+qq_url;
+		baseUrl+="&redirect_uri="+url;
 		String token=HttpClientUtils.get(baseUrl.toString(), "UTF-8");
 		System.out.println("token:"+token);//token:access_token=8302E5F1A80ED9EBD2F3581C3F0BBAA8&expires_in=7776000&refresh_token=9F9F9A2529A9B739420AC43EF5EDD2E1
 		token=token.split("&")[0];
@@ -76,15 +72,14 @@ public class QQorWeChatLoginController extends BaseController {
 		String openid=HttpClientUtils.get(openidUrl.toString(), "UTF-8");
 		System.out.println("openid:"+openid);//openid:callback( {"client_id":"101826833","openid":"81B38A3BC7F27676F86FF5B32275978A"} );
 		openid=StringUtils.substringBetween(openid, "\"openid\":\"", "\"}");
-		String infoUrl= "https://graph.qq.com/user/get_user_info?access_token="+token+"&oauth_consumer_key="+qq_appid+"&openid="+openid;
+		String infoUrl= "https://graph.qq.com/user/get_user_info?access_token="+token+"&oauth_consumer_key="+appid+"&openid="+openid;
 		String user_info =HttpClientUtils.get(infoUrl.toString(), "UTF-8");
 		System.out.println("user_info:"+user_info);
 		JSONObject parseObject = JSON.parseObject(user_info);
         Map<String, Object> map= new HashMap<String, Object>();
         map=parseObject;
         System.out.println(map.get("nickname"));
-        
-        //openid作为唯一值，用来存在数据库，判别的
+      //openid作为唯一值，用来存在数据库，判别的
         if(!openid.isEmpty()) {
         	User  user = userService.findUserByOpenId(openid);//根据这个openID判断是否存在
         	if(user!=null) {
@@ -98,13 +93,14 @@ public class QQorWeChatLoginController extends BaseController {
         		this.getRequest().getSession().setAttribute("loginUser", u);
         	}
         }
-        
-        String redirect_url = "http://localhost:80";
-        response.sendRedirect(redirect_url);//重定向到主页上
+        return "redirect:/";
 	}
 	
 	
-	/**1、修改本地的C:\Windows\System32\drivers\etc\hosts文件，2、项目端口号改成80
+	
+	/**
+	 * 因为没有自己的微信网站，之鞥呢映射别人的
+	 * 1、修改本地的C:\Windows\System32\drivers\etc\hosts文件，2、项目端口号改成80
 	 * 127.0.0.1    note.java.itcast.cn 
 	 */
 	
